@@ -48,6 +48,28 @@ FROM ghcr.io/ublue-os/${SOURCE_IMAGE}${SOURCE_SUFFIX}:${SOURCE_TAG}
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
 
+## mesa 24.1
+RUN rpm-ostree override remove mesa-va-drivers-freeworld mesa-vdpau-drivers-freeworld && \
+    curl -Lo /usr/bin/copr https://raw.githubusercontent.com/ublue-os/COPR-command/main/copr && \
+    chmod +x /usr/bin/copr && \
+    curl -Lo /etc/yum.repos.d/_copr_trouter-bazzite-multilib.repo https://copr.fedorainfracloud.org/coprs/trouter/bazzite-multilib/repo/fedora-"${FEDORA_MAJOR_VERSION}"/trouter-bazzite-multilib-fedora-"${FEDORA_MAJOR_VERSION}".repo?arch=x86_64 && \
+    rpm-ostree override replace \
+    --experimental \
+    --from repo=copr:copr.fedorainfracloud.org:trouter:bazzite-multilib \
+    mesa-filesystem \
+    mesa-libxatracker \
+    mesa-libglapi \
+    mesa-dri-drivers \
+    mesa-libgbm \
+    mesa-libEGL \
+    mesa-libEGL-devel \
+    mesa-vulkan-drivers \
+    mesa-libGL \
+    mesa-libOSMesa \
+    mesa-va-drivers \
+    mesa-vdpau-drivers && \
+    ostree container commit
+
 COPY build.sh /tmp/build.sh
 
 RUN mkdir -p /var/lib/alternatives && \
