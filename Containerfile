@@ -50,6 +50,8 @@ FROM ghcr.io/ublue-os/${SOURCE_IMAGE}${SOURCE_SUFFIX}:${SOURCE_TAG}
 
 # mesa 24.1 + mesa-vulkan-drivers 24.2.0-git
 RUN rpm-ostree override remove mesa-va-drivers-freeworld mesa-vdpau-drivers-freeworld && \
+    curl -Lo /usr/bin/copr https://raw.githubusercontent.com/ublue-os/COPR-command/main/copr && \
+    chmod +x /usr/bin/copr && \
     curl -Lo /etc/yum.repos.d/_copr_gloriouseggroll-nobara-40.repo https://copr.fedorainfracloud.org/coprs/gloriouseggroll/nobara-40/repo/fedora-40/gloriouseggroll-nobara-40-fedora-40.repo && \
 rpm-ostree override replace \
     --experimental \
